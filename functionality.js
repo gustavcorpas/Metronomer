@@ -2,11 +2,17 @@ document.addEventListener('DOMContentLoaded', e => {
 
   let metronome;
 
-  let storedSettings = JSON.parse(localStorage.getItem('settings')) || {bpm: 80, frequency: 220};
-  let bpm = storedSettings.bpm;
-  let freq = storedSettings.frequency;
+  let storedSettings = JSON.parse(localStorage.getItem('settings')) || {};
+
+  let bpm = parseInt(storedSettings.bpm) || 80;
+  let freq = parseInt(storedSettings.frequency) || 220;
+  let adjust = parseInt(storedSettings.adjust) || 0;
+
+  let adjustInterval = null;
 
   const MAX_BPM = 180;
+
+  const MAX_ADJUST = 60;
 
   const MAX_FREQ = 880;
   const MIN_FREQ = 110;
@@ -69,6 +75,52 @@ document.addEventListener('DOMContentLoaded', e => {
       metronome.settings({frequency: freq});
   });
 
+  // SETUP DYNAMIC BPM CHANGER
+  const rangeSliderThumbAdjust = document.querySelector('#range-slider-thumb-adjust');
+  const inputAdjust = document.querySelector('#input-adjust');
+  const pAdjust = document.querySelector('#p-adjust');
+
+  rangeSliderThumbAdjust.style.width = `${(freq - MIN_FREQ) / (MAX_FREQ - MIN_FREQ) * 100}%`;
+  inputAdjust.value = adjust;
+  pAdjust.textContent = adjust;
+
+  inputAdjust.addEventListener('input', e => {
+    adjust = e.target.value;
+    pAdjust.textContent = adjust;
+    rangeSliderThumbAdjust.style.width = `${(adjust) / MAX_ADJUST * 100}%`;
+    registerAdjustChange(adjust, false);
+  });
+
+  let adjustWaiting = false;
+
+  function registerAdjustChange(val, cb){
+    if(!cb && adjustWaiting == true) return;
+    adjustWaiting = true;
+    if(cb && val == adjust) { adjustWaiting = false; return; }
+    setTimeout(registerAdjustChange, 1000, adjust, true);
+
+    // ADJUST CHANGED
+    console.log("adjust changed to: " + adjust);
+    clearInterval(adjustInterval);
+    let s = (adjust / 60);
+    if(s != 0){
+      adjustInterval = setInterval(adjustBPM, 1 / s * 1000 );
+    }
+
+  }
+
+  function adjustBPM(){
+    console.log("adjust");
+    if( metronome && bpm != MAX_BPM && playing ){
+      bpm += 1;
+      metronome.settings({bpm: bpm});
+      pBpm.textContent = bpm;
+      rangeSliderThumbBpm.style.width = `${bpm / MAX_BPM * 100}%`;
+      inputBpm.value = bpm;
+    }
+    console.log("done");
+
+  }
 
 
 

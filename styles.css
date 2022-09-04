@@ -35,6 +35,10 @@ body{
   margin: 20px;
   padding: 20px;
 }
+.space-top{
+  margin-top: 20px;
+  padding-top: 20px;
+}
 .bigText{
   font-size: 2rem;
 }
