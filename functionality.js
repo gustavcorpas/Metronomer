@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', e => {
 
   let metronome;
 
-  let bpm = 80;
+  let storedSettings = JSON.parse(localStorage.getItem('settings')) || {bpm: 80, frequency: 220};
+  let bpm = storedSettings.bpm;
+  let freq = storedSettings.frequency;
+
   const MAX_BPM = 180;
 
-  let freq = 220;
   const MAX_FREQ = 880;
   const MIN_FREQ = 110;
 
@@ -15,6 +17,7 @@ document.addEventListener('DOMContentLoaded', e => {
   const play = document.querySelector('#play');
   const pause = document.querySelector('#pause');
   let playing = false;
+
   toggle.addEventListener('click', e => {
       if(!metronome) { metronome = new Metronome() }
       metronome.settings({bpm: bpm, frequency: freq});
@@ -103,6 +106,7 @@ class Metronome {
       this.#settings,
       settings
     );
+    localStorage.setItem('settings', JSON.stringify(this.#settings));
   }
 
   start(){
@@ -136,7 +140,7 @@ class Metronome {
     this.osc.start(time);
     this.osc.stop(time + this.#settings.noteDuration);
     this.lastnote = time;
-    
+
   }
 
 }
