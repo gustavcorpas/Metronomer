@@ -1,79 +1,79 @@
-document.addEventListener('DOMContentLoaded', e => {
+let metronome;
 
-  let metronome;
+let storedSettings = JSON.parse(localStorage.getItem('settings')) || {};
 
-  let storedSettings = JSON.parse(localStorage.getItem('settings')) || {};
+let bpm = parseInt(storedSettings.bpm) || 80;
+let freq = parseInt(storedSettings.frequency) || 220;
+let adjust = parseInt(storedSettings.adjust) || 0;
 
-  let bpm = parseInt(storedSettings.bpm) || 80;
-  let freq = parseInt(storedSettings.frequency) || 220;
-  let adjust = parseInt(storedSettings.adjust) || 0;
+let adjustInterval = null;
 
-  let adjustInterval = null;
+const MAX_BPM = 180;
 
-  const MAX_BPM = 180;
+const MAX_ADJUST = 60;
 
-  const MAX_ADJUST = 60;
-
-  const MAX_FREQ = 880;
-  const MIN_FREQ = 110;
+const MAX_FREQ = 880;
+const MIN_FREQ = 110;
 
 
-  // SETUP PLAY / PAUSE
-  const toggle = document.querySelector('#toggle');
-  const play = document.querySelector('#play');
-  const pause = document.querySelector('#pause');
-  let playing = false;
+// SETUP PLAY / PAUSE
+const toggle = document.querySelector('#toggle');
+const play = document.querySelector('#play');
+const pause = document.querySelector('#pause');
+let playing = false;
 
-  toggle.addEventListener('click', e => {
-      if(!metronome) { metronome = new Metronome() }
-      metronome.settings({bpm: bpm, frequency: freq});
-      if(!playing){
-        metronome.start();
-        play.classList.add('disable');
-        pause.classList.remove('disable');
+toggle.addEventListener('click', () => {
+    if(!metronome) metronome = new Metronome();
+    metronome.settings({bpm: bpm, frequency: freq});
+    if(!playing){
+      metronome.start();
+      play.classList.add('disable');
+      pause.classList.remove('disable');
 
-      }else{
-        metronome.stop();
-        play.classList.remove('disable');
-        pause.classList.add('disable');
-      }
+    }else{
+      metronome.stop();
+      play.classList.remove('disable');
+      pause.classList.add('disable');
+    }
 
-      playing = !playing;
-  });
+  playing = !playing;
+}, {passive: true});
 
-  // SETUP BPM SLIDER
-  const rangeSliderThumbBpm = document.querySelector('#range-slider-thumb-bpm');
-  const inputBpm = document.querySelector('#input-bpm');
-  const pBpm = document.querySelector('#p-bpm');
+// SETUP BPM SLIDER
+const rangeSliderThumbBpm = document.querySelector('#range-slider-thumb-bpm');
+const inputBpm = document.querySelector('#input-bpm');
+const pBpm = document.querySelector('#p-bpm');
 
-  rangeSliderThumbBpm.style.width = `${bpm / MAX_BPM * 100}%`;
-  inputBpm.value = bpm;
+rangeSliderThumbBpm.style.width = `${bpm / MAX_BPM * 100}%`;
+inputBpm.value = bpm;
+pBpm.textContent = bpm;
+
+inputBpm.addEventListener('input', e => {
+  bpm = e.target.value;
   pBpm.textContent = bpm;
+  rangeSliderThumbBpm.style.width = `${bpm / MAX_BPM * 100}%`;
+  if(metronome){
+    metronome.settings({bpm: bpm});
+  }
+}, {passive: true});
 
-  inputBpm.addEventListener('input', e => {
-    bpm = e.target.value;
-    pBpm.textContent = bpm;
-    rangeSliderThumbBpm.style.width = `${bpm / MAX_BPM * 100}%`;
-    if(metronome)
-      metronome.settings({bpm: bpm});
-  });
+// SETUP FREQUENCY SLIDER
+const rangeSliderThumbFreq = document.querySelector('#range-slider-thumb-freq');
+const inputFreq = document.querySelector('#input-freq');
+const pFreq = document.querySelector('#p-freq');
 
-  // SETUP FREQUENCY SLIDER
-  const rangeSliderThumbFreq = document.querySelector('#range-slider-thumb-freq');
-  const inputFreq = document.querySelector('#input-freq');
-  const pFreq = document.querySelector('#p-freq');
+rangeSliderThumbFreq.style.width = `${(freq - MIN_FREQ) / (MAX_FREQ - MIN_FREQ) * 100}%`;
+inputFreq.value = freq;
+pFreq.textContent = freq;
 
-  rangeSliderThumbFreq.style.width = `${(freq - MIN_FREQ) / (MAX_FREQ - MIN_FREQ) * 100}%`;
-  inputFreq.value = freq;
+inputFreq.addEventListener('input', e => {
+  freq = e.target.value;
   pFreq.textContent = freq;
-
-  inputFreq.addEventListener('input', e => {
-    freq = e.target.value;
-    pFreq.textContent = freq;
-    rangeSliderThumbFreq.style.width = `${(freq - MIN_FREQ) / (MAX_FREQ - MIN_FREQ) * 100}%`;
-    if(metronome)
-      metronome.settings({frequency: freq});
-  });
+  rangeSliderThumbFreq.style.width = `${(freq - MIN_FREQ) / (MAX_FREQ - MIN_FREQ) * 100}%`;
+  if(metronome){
+    metronome.settings({frequency: freq});
+  }
+}, {passive: true});
 
   // SETUP DYNAMIC BPM CHANGER
   const rangeSliderThumbAdjust = document.querySelector('#range-slider-thumb-adjust');
@@ -128,7 +128,6 @@ document.addEventListener('DOMContentLoaded', e => {
 
 
 
-});
 
 
 
@@ -144,7 +143,7 @@ class Metronome {
       frequency: 220,
       noteDuration: 0.2,
       bpm: 60,
-    }
+    };
 
     this.scheduler = null;
     this.scheduleTime = 0.025;
@@ -156,7 +155,7 @@ class Metronome {
 
     Object.assign(
       this.#settings,
-      settings
+      settings,
     );
     localStorage.setItem('settings', JSON.stringify(this.#settings));
   }
@@ -175,7 +174,6 @@ class Metronome {
   scheduleNotes(thisclass){
 
     const t = 60 / thisclass.#settings.bpm;
-    const n = thisclass.lastnote;
     let i = 1;
 
     while( thisclass.lastnote < thisclass.ctx.currentTime + thisclass.bufferTime){
