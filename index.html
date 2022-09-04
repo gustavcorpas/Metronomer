@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="./functionality.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Metronomer</title>
+  </head>
+  <body>
+
+    <div class="container">
+
+      <h1 class="center">Metronomer.js</h1>
+
+      <!-- BPM SLIDER -->
+      <div class="range-slider-container">
+        <div class="range-slider-bg">
+              <div class="range-slider-thumb" id="range-slider-thumb-bpm"></div>
+        </div>
+
+        <input type="range" id="input-bpm" min="1" max="180">
+      </div>
+      <div class="">
+        <p class="center space"><span class="bigText bold" id="p-bpm"></span> <span class="shade">BPM</span></p>
+      </div>
+
+
+      <!-- FREQUENCY SLIDER -->
+      <div class="range-slider-container">
+        <div class="range-slider-bg">
+              <div class="range-slider-thumb" id="range-slider-thumb-freq"></div>
+        </div>
+
+        <input type="range" id="input-freq" min="110" max="880">
+      </div>
+      <div class="">
+        <p class="center space"><span class="bigText bold" id="p-freq"></span> <span class="shade">Hz</span></p>
+      </div>
+
+
+      <!-- PLAY / PAUSE  -->
+      <div id="toggle">
+
+        <svg id="play" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+
+        <svg class="disable" id="pause" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M6 6h12v12H6z"/>
+        </svg>
+
+      </div>
+
+
+    </div>
+
+
+
+  </body>
+</html>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+</style>
