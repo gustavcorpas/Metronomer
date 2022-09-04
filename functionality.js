@@ -30,6 +30,12 @@ toggle.addEventListener('click', () => {
       play.classList.add('disable');
       pause.classList.remove('disable');
 
+    }else{
+      metronome.stop();
+      play.classList.remove('disable');
+      pause.classList.add('disable');
+    }
+
   playing = !playing;
 }, {passive: true});
 
