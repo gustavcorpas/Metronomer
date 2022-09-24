@@ -99,7 +99,7 @@ svg{
   border-radius: 5px;
 }
 input[type=range] {
-
+  height: 40px;
   position: relative;
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
   width: 100%; /* Specific width is required for Firefox. */
@@ -107,6 +107,14 @@ input[type=range] {
 }
 
 input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: var(--primary);
+  width: 60px;
+  height: 42px;
+  border-radius: 15px;
+  box-shadow: -2px 2px 2px -1px rgba(0,0,0,0.4);
+}
+input[type="range"]::-moz-range-thumb{
   -webkit-appearance: none;
   background: var(--primary);
   width: 60px;

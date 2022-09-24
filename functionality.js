@@ -112,7 +112,7 @@ function registerAdjustChange(val, cb){
 function adjustBPM(){
   console.log("adjust");
   if( metronome && bpm !== MAX_BPM && playing ){
-    bpm += 1;
+    bpm = parseInt(bpm) + 1;
     metronome.settings({bpm: bpm});
     pBpm.textContent = bpm;
     rangeSliderThumbBpm.style.width = `${bpm / MAX_BPM * 100}%`;
