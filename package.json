@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "name": "metronomer",
+  "version": "1.0.0",
+  "description": "A simple Metronome App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "ewab"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gustavcorpas/Metronomer.git"
+  },
+  "author": "Gustav",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gustavcorpas/Metronomer/issues"
+  },
+  "homepage": "https://github.com/gustavcorpas/Metronomer#readme",
+  "dependencies": {
+    "easy-web-app-builder": "^1.0.0-beta1"
+  }
+}
